@@ -1,15 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-function AddTodo(props) {
+function AddTodo({ onCreate }) {
+  const [value, setValue] = useState("");
+
+  function submitHandler(event) {
+    event.preventDefault();
+
+    if (value.trim()) {
+      onCreate(value);
+      setValue("");
+    }
+  }
+
   return (
-    <div>
-      <input type="text" />
-      <button type="submit"></button>
-    </div>
+    <form onSubmit={submitHandler}>
+      <input
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+        type="text"
+      />
+      <button type="submit">Add todo</button>
+    </form>
   );
 }
 
-AddTodo.propTypes = {};
+AddTodo.propTypes = {
+  onCreate: PropTypes.func.isRequired,
+};
 
 export default AddTodo;

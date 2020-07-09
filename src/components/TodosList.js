@@ -8,11 +8,7 @@ function TodosList(props) {
     <div>
       <ul className="todoList">
         {props.items.map((item) => (
-          <TodoItem
-            key={item.id}
-            title={item.title}
-            completed={item.completed}
-          />
+          <TodoItem key={item.id} todo={item} />
         ))}
       </ul>
     </div>
