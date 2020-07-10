@@ -5,18 +5,17 @@ import "../styles/TodoList.sass";
 
 function TodosList(props) {
   return (
-    <div>
-      <ul className="todoList">
-        {props.items.map((item) => (
-          <TodoItem key={item.id} todo={item} />
-        ))}
-      </ul>
-    </div>
+    <ul className="todoList">
+      {props.items.map((item) => (
+        <TodoItem key={item.id} todo={item} parent={props.parent} />
+      ))}
+    </ul>
   );
 }
 
 TodosList.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  parent: PropTypes.object,
 };
 
 export default TodosList;
