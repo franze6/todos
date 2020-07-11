@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function arrayNoDub(arr) {
+      let newArr = [];
+      newArr = arr.filter((curr, index, arr) => arr.indexOf(curr) === index) 
+      return newArr;
+    }
+
+    function arrCountNums(arr) {
+      let newArr = [],
+      sortArray = [...arr],
+      currCount = 0;
+
+      sortArray.sort((a,b) => a-b);
+
+      while(sortArray.length > 0) {
+        for(let val of sortArray) 
+          sortArray[0] === val && currCount++;
+        
+        newArr.push(sortArray[0]);
+        newArr.push(currCount);
+        currCount = 0;
+        sortArray = sortArray.filter(curr => sortArray[0] !== curr)
+      }
+
+      return newArr;
+    }
+
+    const arr = [1,0,0,2,4,0,0,0,1,1,2,3,4,6,6,7,7,8];
+    console.log(arrCountNums(arr));
+    console.log(arrayNoDub(arr));
+  </script>
+  
+</body>
+</html>
