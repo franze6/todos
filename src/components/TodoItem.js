@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import Context from "../context";
-import TodosList from "./TodosList";
+import TodoList from "./TodosList";
 
 function TodoItem({ todo, parentTodo }) {
   const {
@@ -75,7 +75,7 @@ function TodoItem({ todo, parentTodo }) {
       </span>
       {todo.subtasks && !parentTodo ? (
         <span className="todoItem__subtasks">
-          <TodosList items={todo.subtasks} parentTodo={todo} />
+          <TodoList items={todo.subtasks} parentTodo={todo} />
         </span>
       ) : null}
     </span>

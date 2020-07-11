@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import TodoItem from "./TodoItem";
 
-function TodosList({ items, parentTodo }) {
+function TodoList({ items, parentTodo }) {
   return (
     <ul className="todoList">
       {items.map((item, index) => (
@@ -12,9 +12,9 @@ function TodosList({ items, parentTodo }) {
   );
 }
 
-TodosList.propTypes = {
+TodoList.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   parentTodo: PropTypes.object,
 };
 
-export default TodosList;
+export default TodoList;
