@@ -1,47 +1,46 @@
 import React from "react";
-import "../styles/App.sass";
-import TodosList from "./TodosList";
+import TodoListDnd from "./TodoListDnd";
 import AddTodo from "./AddTodo";
 import Context from "../context";
 
 function App() {
-  const [todos, setTodos] = React.useState([
-    {
-      id: 1,
-      title: "Купить молоко",
-      completed: false,
-      subtasks: [
-        { id: 4, title: "Купить молоко", completed: false },
-        { id: 5, title: "Убрать в квартире", completed: false },
-        { id: 6, title: "Приготовить ужин", completed: false },
-      ],
-    },
-    { id: 2, title: "Убрать в квартире", completed: false },
-    { id: 3, title: "Приготовить ужин", completed: false },
-  ]);
+  const [todos, setTodos] = React.useState(
+    JSON.parse(localStorage.getItem("todos")) || []
+  );
   return (
     <Context.Provider
-      value={{ removeTodo, editTodo, removeSubTask, editSubTask }}
+      value={{
+        removeTodo,
+        editTodo,
+        removeSubTask,
+        editSubTask,
+        changeCompleted,
+        changeSubCompleted,
+        addSubTask,
+      }}
     >
       <div className="wrapper">
         <h1>Todo's!</h1>
         <AddTodo onCreate={addTodo} />
-        {todos.length ? <TodosList items={todos} /> : <h3>No todos!</h3>}
+        {todos.length ? (
+          <TodoListDnd items={todos} reorderItems={reorder} />
+        ) : (
+          <h3>No todos!</h3>
+        )}
       </div>
     </Context.Provider>
   );
 
   function removeTodo(id) {
-    setTodos(todos.filter((curr) => curr.id !== id));
+    saveTodos(todos.filter((curr) => curr.id !== id));
   }
 
   function removeSubTask(todoId, id) {
-    setTodos(
+    saveTodos(
       todos.map((curr) => {
         if (curr.id === todoId) {
-          if (curr.subtasks) {
-            curr.subtasks = curr.subtasks.filter((curr) => curr.id !== id);
-          }
+          curr.subtasks &&
+            (curr.subtasks = curr.subtasks.filter((curr) => curr.id !== id));
         }
         return curr;
       })
@@ -49,21 +48,21 @@ function App() {
   }
 
   function editTodo(id, title) {
-    setTodos(
+    saveTodos(
       todos.map((curr) => {
-        if (curr.id === id) curr.title = title;
+        curr.id === id && (curr.title = title);
         return curr;
       })
     );
   }
 
   function editSubTask(todoId, id, title) {
-    setTodos(
+    saveTodos(
       todos.map((curr) => {
         if (curr.id === todoId) {
           if (curr.subtasks) {
             curr.subtasks = curr.subtasks.map((curr) => {
-              if (curr.id === id) curr.title = title;
+              curr.id === id && (curr.title = title);
               return curr;
             });
           }
@@ -73,16 +72,82 @@ function App() {
     );
   }
 
-  function addTodo(title) {
-    setTodos(
+  function addTodo() {
+    saveTodos(
       todos.concat([
         {
           id: Date.now(),
-          title,
+          title: "Новая задача",
           completed: false,
         },
       ])
     );
+  }
+
+  function addSubTask(todoId) {
+    saveTodos(
+      todos.map((curr) => {
+        if (curr.id === todoId) {
+          !curr.subtasks && (curr.subtasks = []);
+          curr.subtasks = curr.subtasks.concat([
+            {
+              id: Date.now(),
+              title: "Новая подзадача",
+              completed: false,
+            },
+          ]);
+        }
+        return curr;
+      })
+    );
+  }
+
+  function changeCompleted(id, completed) {
+    let itemIndex;
+    saveTodos(
+      todos.map((curr, index) => {
+        if (curr.id === id) {
+          curr.completed = completed;
+          if (curr.subtasks) {
+            curr.subtasks.map((curr) => {
+              curr.completed = completed;
+              return curr;
+            });
+          }
+          itemIndex = index;
+        }
+        return curr;
+      })
+    );
+    completed ? reorder(itemIndex, todos.length) : reorder(itemIndex, 0);
+  }
+
+  function changeSubCompleted(todoId, id, completed) {
+    saveTodos(
+      todos.map((curr) => {
+        if (curr.id === todoId) {
+          if (curr.subtasks) {
+            curr.subtasks = curr.subtasks.map((curr) => {
+              curr.id === id && (curr.completed = completed);
+              return curr;
+            });
+          }
+        }
+        return curr;
+      })
+    );
+  }
+
+  function reorder(startIndex, endIndex) {
+    const result = Array.from(todos);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    saveTodos(result);
+  }
+
+  function saveTodos(items) {
+    localStorage.setItem("todos", JSON.stringify(items));
+    setTodos(items);
   }
 }
 

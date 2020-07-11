@@ -1,13 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import TodoItem from "./TodoItem";
-import "../styles/TodoList.sass";
 
-function TodosList(props) {
+function TodosList({ items, parentTodo }) {
   return (
     <ul className="todoList">
-      {props.items.map((item) => (
-        <TodoItem key={item.id} todo={item} parent={props.parent} />
+      {items.map((item, index) => (
+        <TodoItem key={item.id} todo={item} parentTodo={parentTodo} index={index} />
       ))}
     </ul>
   );
@@ -15,7 +14,7 @@ function TodosList(props) {
 
 TodosList.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
-  parent: PropTypes.object,
+  parentTodo: PropTypes.object,
 };
 
 export default TodosList;

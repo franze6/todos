@@ -1,0 +1,43 @@
+/* Icons */
+
+[class$='-icon']
+    &::before
+        font-family: 'TodoIcons'
+    &:active
+        opacity: 0.7
+    &:hover::after
+        content: attr(title)
+        position: absolute
+        bottom: 5px
+
+.trash-icon
+    cursor: pointer
+    &::before
+        content: '\e900'
+        font-size: 22px;
+    &:hover
+        color: #ff0000
+
+.pen-icon 
+    cursor: pointer
+    &::before
+       content: '\e901'
+       font-size: 22px;
+    &:hover
+        color: #003cff 
+
+.addSub-icon
+    cursor: pointer
+    &::before
+        content: '\e902'
+        font-size: 22px;
+    &:hover
+        color: #13dd0c
+
+.add-icon
+    cursor: pointer
+    &::before
+        content: '\e903'
+        font-size: 36px;
+    &:hover
+        color: #003cff 

@@ -1,24 +1,42 @@
 import React, { useContext, useState } from "react";
 import PropTypes from "prop-types";
-import "../styles/TodoItem.sass";
 import Context from "../context";
 import TodosList from "./TodosList";
 
-function TodoItem(props) {
-  const todo = props.todo;
-  const { removeTodo, editTodo, removeSubTask, editSubTask } = useContext(
-    Context
-  );
+function TodoItem({ todo, parentTodo }) {
+  const {
+    removeTodo,
+    editTodo,
+    removeSubTask,
+    editSubTask,
+    changeCompleted,
+    changeSubCompleted,
+    addSubTask,
+  } = useContext(Context);
   const [editState, setEditState] = useState(false);
   const [value, setValue] = useState(todo.title);
 
   return (
-    <li className="todoItem">
+    <span
+      className={"todoItem" + (todo.completed ? " todoItem__completed" : "")}
+    >
       <span className="todoItem__body">
         <span>
-          <input type="checkbox" defaultChecked={todo.completed} />
+          <input
+            type="checkbox"
+            defaultChecked={todo.completed}
+            onChange={(event) => {
+              parentTodo
+                ? changeSubCompleted(
+                    parentTodo.id,
+                    todo.id,
+                    event.target.checked
+                  )
+                : changeCompleted(todo.id, event.target.checked);
+            }}
+          />
           {!editState ? (
-            todo.title
+            <p className="todoItem__text">{todo.title}</p>
           ) : (
             <input
               value={value}
@@ -27,37 +45,46 @@ function TodoItem(props) {
           )}
         </span>
         <span className="todoItem__functions">
+          {!parentTodo && (
+            <span
+              className="addSub-icon"
+              title="Добавить подзадачу"
+              onClick={() => addSubTask(todo.id)}
+            ></span>
+          )}
           <span
             className="pen-icon"
+            title="Редактировать"
             onClick={() => {
-              !props.parent
+              !parentTodo
                 ? editTodo(todo.id, value)
-                : editSubTask(props.parent.id, todo.id, value);
+                : editSubTask(parentTodo.id, todo.id, value);
               setEditState(!editState);
             }}
           ></span>
           <span
             className="trash-icon"
+            title="Удалить"
             onClick={() =>
-              !props.parent
+              !parentTodo
                 ? removeTodo(todo.id)
-                : removeSubTask(props.parent.id, todo.id)
+                : removeSubTask(parentTodo.id, todo.id)
             }
           ></span>
         </span>
       </span>
-      {todo.subtasks && !props.parent ? (
+      {todo.subtasks && !parentTodo ? (
         <span className="todoItem__subtasks">
-          <TodosList items={todo.subtasks} parent={todo} />
+          <TodosList items={todo.subtasks} parentTodo={todo} />
         </span>
       ) : null}
-    </li>
+    </span>
   );
 }
 
 TodoItem.propTypes = {
   todo: PropTypes.object.isRequired,
-  parent: PropTypes.object,
+  parentTodo: PropTypes.object,
 };
 
 export default TodoItem;

@@ -1,4 +1,8 @@
 @import 'fonts'
+@import 'AddTodo'
+@import 'icons'
+@import 'TodoItem'
+@import 'TodoList'
     
 .wrapper 
     margin: 0 auto
@@ -6,24 +10,4 @@
     &>h1
         text-align: center
 
-
-/* Icons */
-
-[class$='-icon']
-    &:before
-        font-family: 'TodoIcons'
-
-.trash-icon
-    &:before
-        content: '\e900'
-        font-size: 22px;
-    &:hover
-        color: #ff0000
-
-.pen-icon 
-    &:before
-       content: '\e901'
-       font-size: 22px;
-    &:hover
-        color: #003cff 
 
