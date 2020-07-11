@@ -22,7 +22,12 @@ function TodoListDnd({ items, reorderItems, parentTodo }) {
         {(provided) => (
           <div ref={provided.innerRef} {...provided.droppableProps}>
             {items.map((item, index) => (
-              <Draggable draggableId={"id-" + index} index={index} key={index} isDragDisabled={item.completed}>
+              <Draggable
+                draggableId={"id-" + index}
+                index={index}
+                key={index}
+                isDragDisabled={item.completed}
+              >
                 {(provided) => (
                   <div
                     ref={provided.innerRef}
